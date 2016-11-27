@@ -78,8 +78,31 @@ class CI_Controller {
 		$this->load =& load_class('Loader', 'core');
 		$this->load->initialize();
 		log_message('info', 'Controller Class Initialized');
+		
+		//加载session判断是否登陆
+		$this->load->library('session');//开启session
+		$this->check_login();//调用判断登录的方法		
 	}
-
+	
+	//全局判断是否登陆
+	public $need_login = TRUE;//添加登录状态属性
+	private function check_login()
+	{
+		//判断登录的方法
+		if($this->need_login){
+			//判断session是否含有username，如果有则表示已登陆，否则重定向到登陆页面
+			$session_data = $this->session->userdata('username');
+			if(!$session_data){
+				$url = "/CI/myCi/index.php/login";
+				echo "<script language='javascript' type='text/javascript'>";
+				echo "window.location.href='$url'";
+				echo "</script>";
+				exit;
+			}
+		}
+	}
+	
+	
 	// --------------------------------------------------------------------
 
 	/**

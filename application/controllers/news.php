@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class News extends CI_Controller {
+	public function __construct() {
+        parent::__construct ();
+    }  
 	public function index()
 	{
 		echo "Wsscat's home";
@@ -73,6 +76,8 @@ class News extends CI_Controller {
 			$data['news'][$i]['image'] = explode(",",$item['image']);
 			$i++;
 		}
+		//显示退出登陆的页面
+		$this->load->view ('login/logout');
 		$this->load->view('news/news_show', $data);
 	}
 	
@@ -100,6 +105,35 @@ class News extends CI_Controller {
 			//查询需要被执行修改的详细信息
 			$data['news'] = $this->news_model->show_detail($data['id']);
 			$this->load->view('news/news_edit', $data);
+		}
+	}
+	
+	//用ck富文本编辑器修改新闻
+	public function edit_by_ck()
+	{
+		$this->load->helper('url');
+		$this->load->helper('form');
+		$this->load->model('news_model');
+		$this->load->model('channel_model');
+		$data['title'] = "修改新闻";
+		$data['channels'] = $this->channel_model->show_data();
+		//根据id主键修改对应的新闻
+		$data['id'] = $this->input->get('id');
+		//如果提交了修改内容
+		if($this->input->post()){
+			//var_dump($this->input->post());
+			$title = $this->input->post('title');
+			$text = $this->input->post('text');
+			$channel = $this->input->post('channel');
+			$channel_name = $this->channel_model->show_data_from_id_to_channel($this->input->post('channel'))[0]['channel'];
+			$this->news_model->edit_data($data['id'], $title, $text, $channel, $channel_name);
+			//更新成功后返回到列表页
+			//redirect('/news/show');
+			echo json_encode($this->input->post());
+		}else{
+			//查询需要被执行修改的详细信息
+			$data['news'] = $this->news_model->show_detail($data['id']);
+			$this->load->view('news/news_edit_by_ck', $data);
 		}
 	}
 	

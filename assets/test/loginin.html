@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="wscat">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>测试登陆</title>
+	</head>
+	<script src="../lib/angular.js"></script>
+
+	<body ng-controller="loginCtrl">
+		<p>{{name}}'s test</p>
+		用户名：
+		<input type="text" ng-model="username" /> 密码：
+		<input type="password" ng-model="password" />
+		<button ng-click="submit()">submit</button>
+	</body>
+	<script>
+		angular.module('MyModule', [], function($httpProvider) {
+			// Use x-www-form-urlencoded Content-Type
+			$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+
+			/**
+			 * The workhorse; converts an object to x-www-form-urlencoded serialization.
+			 * @param {Object} obj
+			 * @return {String}
+			 */
+			var param = function(obj) {
+				var query = '',
+					name, value, fullSubName, subName, subValue, innerObj, i;
+
+				for(name in obj) {
+					value = obj[name];
+
+					if(value instanceof Array) {
+						for(i = 0; i < value.length; ++i) {
+							subValue = value[i];
+							fullSubName = name + '[' + i + ']';
+							innerObj = {};
+							innerObj[fullSubName] = subValue;
+							query += param(innerObj) + '&';
+						}
+					} else if(value instanceof Object) {
+						for(subName in value) {
+							subValue = value[subName];
+							fullSubName = name + '[' + subName + ']';
+							innerObj = {};
+							innerObj[fullSubName] = subValue;
+							query += param(innerObj) + '&';
+						}
+					} else if(value !== undefined && value !== null)
+						query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+				}
+
+				return query.length ? query.substr(0, query.length - 1) : query;
+			};
+
+			// Override $http service's default transformRequest
+			$httpProvider.defaults.transformRequest = [function(data) {
+				return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+			}];
+		});
+		var app = angular.module('wscat', ['MyModule']);
+		app.controller('loginCtrl', function($scope, $http) {
+			$scope.name = 'wscat';
+			$scope.submit = function() {
+				//测试用户帐号密码登陆
+				$http.post('http://localhost/CI/myCi/index.php/login_api/login', {
+					params: {
+						username: $scope.username,
+						password: $scope.password
+					}
+				}).success(function(data) {
+					console.log(data);
+					//测试用户自动登陆
+					$http.post('http://localhost/CI/myCi/index.php/login_api/auto_login', {
+						params: {
+							username: $scope.username,
+							token: data.info.token
+						}
+					}).success(function(data) {
+						console.log(data);
+						//测试退出登陆
+						$http.post('http://localhost/CI/myCi/index.php/login_api/logout', {
+							params: {
+								username: $scope.username,
+								token: data.info.token
+							}
+						}).success(function(data) {
+							console.log(data);
+						})
+					})
+				})
+			}
+		})
+	</script>
+
+</html>

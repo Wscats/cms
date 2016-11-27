@@ -6,6 +6,7 @@
 	<body>
 		
 		<h2><?php echo $title; ?></h2>
+		<a href="<?php echo site_url('news/edit_by_ck?id='.$id);?>">富文本编辑</a>
 		<form action="<?php echo site_url('news/edit?id='.$id);?>" method="post" accept-charset="utf-8">
 			<select name="channel">
 				<?php foreach ($channels as $item):?>
