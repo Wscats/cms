@@ -93,7 +93,10 @@ class CI_Controller {
 			//判断session是否含有username，如果有则表示已登陆，否则重定向到登陆页面
 			$session_data = $this->session->userdata('username');
 			if(!$session_data){
-				$url = "/CI/myCi/index.php/login";
+				//默认
+				//$url = "/CI/myCi/index.php/login";
+				//获取此时页面的url
+				$url = $_SERVER['PHP_SELF']."/login";
 				echo "<script language='javascript' type='text/javascript'>";
 				echo "window.location.href='$url'";
 				echo "</script>";
