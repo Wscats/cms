@@ -23,7 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/CI/myCi/';
+
+/*
+| 每次更改项目地址时候必须对应更改 By wscats
+*/
+
+$config['base_url'] = 'http://localhost:81/news/php/';
 
 /*
 |--------------------------------------------------------------------------
