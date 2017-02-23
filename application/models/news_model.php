@@ -8,7 +8,7 @@
     public function add_data($data)
     {
     		$this->load->database();
-        $this->db->insert('news', $data);
+        	$this->db->insert('news', $data);
     }
     public function delete_data($id)
     {
@@ -22,6 +22,14 @@
     {
     		$this->load->database();
     		$this->db->where("id", $id);
+    		$query = $this->db->get("news");
+    		return $query->result_array();
+    }
+    //根据主键id显示需要被修改新闻的详细信息
+    public function show_detail_by_channel_id($channel_id)
+    {
+    		$this->load->database();
+    		$this->db->where("channel_id", $channel_id);
     		$query = $this->db->get("news");
     		return $query->result_array();
     }

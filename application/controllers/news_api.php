@@ -13,4 +13,27 @@ class News_api extends CI_Controller {
 		);
 		echo json_encode($api_data);
 	}
+	
+	public function show_detail()
+	{
+		$this->load->model('news_model');
+		//获取ajax请求回来的id查找对应详细信息
+		$id = $this->input->get('id');
+		$data['news'] = $this->news_model->show_detail($id);
+		$api_data = array(
+			'news_list' => $data['news'],
+		);
+		echo json_encode($api_data);
+	}
+	
+	public function show_detail_by_channel_id()
+	{
+		$this->load->model('news_model');
+		$channel_id = $this->input->get('channel_id');
+		$data['news'] = $this->news_model->show_detail_by_channel_id($channel_id);
+		$api_data = array(
+			'news_list' => $data['news'],
+		);
+		echo json_encode($api_data);
+	}
 }
