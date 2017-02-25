@@ -3,6 +3,7 @@
 	<head>
 		<title>form</title>
 	</head>
+	<?php require_once('css/css.php');?>
 	<body>
 		
 		<h2><?php echo $title; ?></h2>

@@ -62,7 +62,7 @@
 				'swf': '<?php echo base_url('assets/lib/uploadify/uploadify.swf');?>',
 				'uploader': 'upload_picture',
 				'onUploadSuccess': function(file, data, response) {
-					imgArr.push("http://localhost/CI/myCi/uploads/"+file.name);
+					imgArr.push("<?php echo base_url("uploads/");?>"+file.name);
 					$('#img').val(imgArr);
 					//每次渲染前清空容器，让新的图片重新渲染
 					$("#img_url").text("");
