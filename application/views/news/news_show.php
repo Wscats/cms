@@ -2,11 +2,13 @@
 <html>
 
 	<head>
-		<title>hello</title>
+		<title>新闻列表</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<?php require_once('css/css.php');?>
 	</head>
-	<?php require_once('css/css.php');?>
 
 	<body>
+		<?php require_once('news_header.php');?>
 		<div class="weui-panel weui-panel_access">
 			<div class="weui-panel__hd">
 				<span>新闻列表</span>

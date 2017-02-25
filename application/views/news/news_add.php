@@ -3,6 +3,7 @@
 
 	<head>
 		<title>form</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<script src="<?php echo base_url('assets/lib/jquery.js');?>"></script>
 	<script src="<?php echo base_url('assets/lib/uploadify/jquery.uploadify.js');?>"></script>
@@ -11,14 +12,14 @@
 
 	<body>
 		<?php require_once('news_header.php');?>
-		<?php echo validation_errors(); ?>
-		<?php echo form_open('news/add'); ?>
 		<div class="weui-panel weui-panel_access">
 		<div class="weui-panel__hd">
 			<span><?php echo $title; ?></span>
 			<a style="display: block;" href="<?php echo site_url('channel/add');?>" class="weui-btn weui-btn_mini weui-btn_default">添加频道</a>
 			<a style="display: block;" href="<?php echo site_url('news/show');?>" class="weui-btn weui-btn_mini weui-btn_default">返回新闻列表</a>
 		</div>
+		<?php echo validation_errors(); ?>
+		<?php echo form_open('news/add'); ?>
 		<div class="weui-cells__title">添加频道</div>
 		<div class="weui-cells">
 			<div class="weui-cell weui-cell_select weui-cell_select-before">
@@ -41,7 +42,7 @@
 			<div class="weui-cell">
 				<div class="weui-cell__bd">
 					<textarea class="weui-textarea" name="text" placeholder="请输入内容" rows="3"></textarea>
-					<div class="weui-textarea-counter"><span>0</span>/200</div>
+					<!--<div class="weui-textarea-counter"><span>0</span>/200</div>-->
 				</div>
 			</div>
 		</div>
@@ -61,7 +62,7 @@
 						<div class="weui-uploader">
 							<div class="weui-uploader__hd">
 								<p class="weui-uploader__title">图片上传</p>
-								<div class="weui-uploader__info">0/2</div>
+								<!--<div class="weui-uploader__info">0/2</div>-->
 							</div>
 							<div class="weui-uploader__bd">
 								<ul class="weui-uploader__files" id="img_url">

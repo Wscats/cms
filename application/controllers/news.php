@@ -77,7 +77,7 @@ class News extends CI_Controller {
 			$i++;
 		}
 		//显示退出登陆的页面
-		$this->load->view ('login/logout');
+		//$this->load->view ('login/logout');
 		$this->load->view('news/news_show', $data);
 	}
 	

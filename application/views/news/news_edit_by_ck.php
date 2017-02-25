@@ -3,6 +3,7 @@
 
 	<head>
 		<title>form</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<!--ck资源文件-->
 	<script src="<?php echo base_url('assets/lib/ckeditor/ckeditor.js');?>"></script>

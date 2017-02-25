@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>form</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<?php require_once('css/css.php');?>
 	<body>
