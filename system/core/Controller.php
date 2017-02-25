@@ -81,7 +81,7 @@ class CI_Controller {
 		
 		//加载session判断是否登陆
 		$this->load->library('session');//开启session
-		$this->check_login();//调用判断登录的方法		
+		//$this->check_login();//调用判断登录的方法		
 	}
 	
 	//全局判断是否登陆

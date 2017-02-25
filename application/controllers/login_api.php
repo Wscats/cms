@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 class Login_api extends CI_Controller {
     public
     function __construct() {
@@ -19,6 +20,49 @@ class Login_api extends CI_Controller {
         } else {
             $this -> load -> view('login/loginin');
         }
+    }
+    
+    function register() {
+            $this -> load -> model('login_model');
+            $data = array(
+                'user_name' => $this->input->post('params')['username'],
+                'password' => md5($this->input->post('params')['password'])
+            );
+            $this ->login_model->register_user($data);
+            //取用户数据
+            $data_from_db = $this -> login_model -> show_user($data['user_name']);
+            //根据在数据库取回的数组是否为空，判断用户是否存在
+            if ($data_from_db) {
+                //验证密码是否正确
+                if ($data['password'] == $data_from_db[0]['password']) {
+                		//每次登陆都会往数据库更新令牌
+                    //用函数随机生成令牌
+                    $token = array(
+                    		'token' => $this -> genToken(),
+                    );
+                    $this -> login_model -> set_token($data_from_db[0]['id'],$token);
+                    //输出令牌给前端保存，前端保存到cookie中
+                    echo json_encode(array(
+                    		'status' => 'success',
+                    		'code' => 1,
+                    		'info' => $token,
+                    		'user_name' => $data_from_db[0]['user_name'],
+                    		'id' => $data_from_db[0]['id'],
+                    ));
+                } else {
+                		echo json_encode(array(
+                    		'status' => 'failure',
+                    		'code' => 0,
+                    ));
+                    //echo "密码错误,请返回重新输入";
+                }
+            } else {
+            			echo json_encode(array(
+                    		'status' => 'failure',
+                    		'code' => 0,
+                    ));
+                //echo "用户不存在,请返回重新输入";
+            }
     }
     
     public

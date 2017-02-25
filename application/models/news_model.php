@@ -12,7 +12,7 @@
     }
     public function delete_data($id)
     {
-    		var_dump($id);
+    		//var_dump($id);
     		$this->load->database();
     		$this->db->where("id", $id);
 		$this->db->delete("news");
