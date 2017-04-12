@@ -28,6 +28,7 @@ class Login_api extends CI_Controller {
                 'user_name' => $this->input->post('params')['username'],
                 'password' => md5($this->input->post('params')['password'])
             );
+            //var_dump($this->input->post());
             $this ->login_model->register_user($data);
             //取用户数据
             $data_from_db = $this -> login_model -> show_user($data['user_name']);

@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | 每次更改项目地址时候必须对应更改 By wscats
 */
 
-$config['base_url'] = 'http://localhost:81/news/php/';
+$config['base_url'] = 'http://10.3.132.67:81/news/php/';
 
 /*
 |--------------------------------------------------------------------------
