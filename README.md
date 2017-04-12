@@ -63,11 +63,11 @@ url根据服务器域名对应更改(例如本机url就是localhost)
 ### 插入新闻的接口
 |Port|URL|Method|
 |-|-|-|
-|插入新闻的接口|main/news_api/insert_news|
+|插入新闻的接口|main/news_api/insert_news|GET|
 
 |Params|Other|
 |-|-|
-|GET|title,text||
+|title,text||
 
 ### 删除新闻的接口
 |Port|URL|Method|
