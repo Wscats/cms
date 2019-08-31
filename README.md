@@ -1,4 +1,5 @@
-## CI-News-CMS
+## CMS API
+
 登录界面:
 url根据服务器域名对应更改(例如本机url就是localhost)
 
