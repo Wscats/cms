@@ -1,3 +1,5 @@
+'use strict';
+
 $( document ).ready(function() {
     // Shift nav in mobile when clicking the menu.
     $(document).on('click', "[data-toggle='wy-nav-top']", function() {
@@ -17,7 +19,7 @@ $( document ).ready(function() {
 });
 
 window.SphinxRtdTheme = (function (jquery) {
-    var stickyNav = (function () {
+    const stickyNav = (function () {
         var navBar,
             win,
             stickyNavCssClass = 'stickynav',

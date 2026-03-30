@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * searchtools.js_t
  * ~~~~~~~~~~~~~~~~
@@ -13,9 +15,9 @@
 /**
  * Porter Stemmer
  */
-var Stemmer = function() {
+const Stemmer = function() {
 
-  var step2list = {
+  const step2list = {
     ational: 'ate',
     tional: 'tion',
     enci: 'ence',
@@ -39,7 +41,7 @@ var Stemmer = function() {
     logi: 'log'
   };
 
-  var step3list = {
+  const step3list = {
     icate: 'ic',
     ative: '',
     alize: 'al',
@@ -49,21 +51,21 @@ var Stemmer = function() {
     ness: ''
   };
 
-  var c = "[^aeiou]";          // consonant
-  var v = "[aeiouy]";          // vowel
-  var C = c + "[^aeiouy]*";    // consonant sequence
-  var V = v + "[aeiou]*";      // vowel sequence
+  const c = "[^aeiou]";          // consonant
+  const v = "[aeiouy]";          // vowel
+  const C = c + "[^aeiouy]*";    // consonant sequence
+  const V = v + "[aeiou]*";      // vowel sequence
 
-  var mgr0 = "^(" + C + ")?" + V + C;                      // [C]VC... is m>0
-  var meq1 = "^(" + C + ")?" + V + C + "(" + V + ")?$";    // [C]VC[V] is m=1
-  var mgr1 = "^(" + C + ")?" + V + C + V + C;              // [C]VCVC... is m>1
-  var s_v   = "^(" + C + ")?" + v;                         // vowel in stem
+  const mgr0 = "^(" + C + ")?" + V + C;                      // [C]VC... is m>0
+  const meq1 = "^(" + C + ")?" + V + C + "(" + V + ")?$";    // [C]VC[V] is m=1
+  const mgr1 = "^(" + C + ")?" + V + C + V + C;              // [C]VCVC... is m>1
+  const s_v   = "^(" + C + ")?" + v;                         // vowel in stem
 
   this.stemWord = function (w) {
     var stem;
     var suffix;
     var firstch;
-    var origword = w;
+    const origword = w;
 
     if (w.length < 3)
       return w;
@@ -74,7 +76,7 @@ var Stemmer = function() {
     var re4;
 
     firstch = w.substr(0,1);
-    if (firstch == "y")
+    if (firstch === "y")
       w = firstch.toUpperCase() + w.substr(1);
 
     // Step 1a
@@ -90,7 +92,7 @@ var Stemmer = function() {
     re = /^(.+?)eed$/;
     re2 = /^(.+?)(ed|ing)$/;
     if (re.test(w)) {
-      var fp = re.exec(w);
+      let fp = re.exec(w);
       re = new RegExp(mgr0);
       if (re.test(fp[1])) {
         re = /.$/;
@@ -98,7 +100,7 @@ var Stemmer = function() {
       }
     }
     else if (re2.test(w)) {
-      var fp = re2.exec(w);
+      let fp = re2.exec(w);
       stem = fp[1];
       re2 = new RegExp(s_v);
       if (re2.test(stem)) {
@@ -120,7 +122,7 @@ var Stemmer = function() {
     // Step 1c
     re = /^(.+?)y$/;
     if (re.test(w)) {
-      var fp = re.exec(w);
+      let fp = re.exec(w);
       stem = fp[1];
       re = new RegExp(s_v);
       if (re.test(stem))
@@ -130,7 +132,7 @@ var Stemmer = function() {
     // Step 2
     re = /^(.+?)(ational|tional|enci|anci|izer|bli|alli|entli|eli|ousli|ization|ation|ator|alism|iveness|fulness|ousness|aliti|iviti|biliti|logi)$/;
     if (re.test(w)) {
-      var fp = re.exec(w);
+      let fp = re.exec(w);
       stem = fp[1];
       suffix = fp[2];
       re = new RegExp(mgr0);
@@ -141,7 +143,7 @@ var Stemmer = function() {
     // Step 3
     re = /^(.+?)(icate|ative|alize|iciti|ical|ful|ness)$/;
     if (re.test(w)) {
-      var fp = re.exec(w);
+      let fp = re.exec(w);
       stem = fp[1];
       suffix = fp[2];
       re = new RegExp(mgr0);
@@ -153,14 +155,14 @@ var Stemmer = function() {
     re = /^(.+?)(al|ance|ence|er|ic|able|ible|ant|ement|ment|ent|ou|ism|ate|iti|ous|ive|ize)$/;
     re2 = /^(.+?)(s|t)(ion)$/;
     if (re.test(w)) {
-      var fp = re.exec(w);
+      let fp = re.exec(w);
       stem = fp[1];
       re = new RegExp(mgr1);
       if (re.test(stem))
         w = stem;
     }
     else if (re2.test(w)) {
-      var fp = re2.exec(w);
+      let fp = re2.exec(w);
       stem = fp[1] + fp[2];
       re2 = new RegExp(mgr1);
       if (re2.test(stem))
@@ -170,7 +172,7 @@ var Stemmer = function() {
     // Step 5
     re = /^(.+?)e$/;
     if (re.test(w)) {
-      var fp = re.exec(w);
+      const fp = re.exec(w);
       stem = fp[1];
       re = new RegExp(mgr1);
       re2 = new RegExp(meq1);
@@ -186,7 +188,7 @@ var Stemmer = function() {
     }
 
     // and turn initial Y back to y
-    if (firstch == "y")
+    if (firstch === "y")
       w = firstch.toLowerCase() + w.substr(1);
     return w;
   }
@@ -197,7 +199,7 @@ var Stemmer = function() {
 /**
  * Simple result scoring code.
  */
-var Scorer = {
+const Scorer = {
   // Implement the following function to further tweak the score for each result
   // The function takes a result array [filename, title, anchor, descr, score]
   // and returns the new score.
@@ -228,16 +230,16 @@ var Scorer = {
 /**
  * Search Module
  */
-var Search = {
+const Search = {
 
   _index : null,
   _queued_query : null,
   _pulse_status : -1,
 
   init : function() {
-      var params = $.getQueryParameters();
+      const params = $.getQueryParameters();
       if (params.q) {
-          var query = params.q[0];
+          const query = params.q[0];
           $('input[name="q"]')[0].value = query;
           this.performSearch(query);
       }
@@ -247,7 +249,7 @@ var Search = {
     $.ajax({type: "GET", url: url, data: null,
             dataType: "script", cache: true,
             complete: function(jqxhr, textstatus) {
-              if (textstatus != "success") {
+              if (textstatus !== "success") {
                 document.getElementById("searchindexloader").src = url;
               }
             }});
@@ -280,7 +282,7 @@ var Search = {
     function pulse() {
       var i;
       Search._pulse_status = (Search._pulse_status + 1) % 4;
-      var dotString = '';
+      const dotString = '';
       for (i = 0; i < Search._pulse_status; i++)
         dotString += '.';
       Search.dots.text(dotString);
@@ -316,30 +318,30 @@ var Search = {
    */
   query : function(query) {
     var i;
-    var stopwords = ["a","and","are","as","at","be","but","by","for","if","in","into","is","it","near","no","not","of","on","or","such","that","the","their","then","there","these","they","this","to","was","will","with"];
+    const stopwords = ["a","and","are","as","at","be","but","by","for","if","in","into","is","it","near","no","not","of","on","or","such","that","the","their","then","there","these","they","this","to","was","will","with"];
 
     // stem the searchterms and add them to the correct list
-    var stemmer = new Stemmer();
-    var searchterms = [];
-    var excluded = [];
-    var hlterms = [];
-    var tmp = query.split(/\s+/);
-    var objectterms = [];
+    const stemmer = new Stemmer();
+    const searchterms = [];
+    const excluded = [];
+    const hlterms = [];
+    const tmp = query.split(/\s+/);
+    const objectterms = [];
     for (i = 0; i < tmp.length; i++) {
       if (tmp[i] !== "") {
           objectterms.push(tmp[i].toLowerCase());
       }
 
-      if ($u.indexOf(stopwords, tmp[i].toLowerCase()) != -1 || tmp[i].match(/^\d+$/) ||
+      if ($u.indexOf(stopwords, tmp[i].toLowerCase()) !== -1 || tmp[i].match(/^\d+$/) ||
           tmp[i] === "") {
         // skip this "word"
         continue;
       }
       // stem the word
-      var word = stemmer.stemWord(tmp[i].toLowerCase());
+      let word = stemmer.stemWord(tmp[i].toLowerCase());
       var toAppend;
       // select the correct list
-      if (word[0] == '-') {
+      if (word[0] === '-') {
         toAppend = excluded;
         word = word.substr(1);
       }
@@ -351,23 +353,23 @@ var Search = {
       if (!$u.contains(toAppend, word))
         toAppend.push(word);
     }
-    var highlightstring = '?highlight=' + $.urlencode(hlterms.join(" "));
+    const highlightstring = '?highlight=' + $.urlencode(hlterms.join(" "));
 
     // console.debug('SEARCH: searching for:');
     // console.info('required: ', searchterms);
     // console.info('excluded: ', excluded);
 
     // prepare search
-    var terms = this._index.terms;
-    var titleterms = this._index.titleterms;
+    const terms = this._index.terms;
+    const titleterms = this._index.titleterms;
 
     // array of [filename, title, anchor, descr, score]
-    var results = [];
+    let results = [];
     $('#search-progress').empty();
 
     // lookup as object
     for (i = 0; i < objectterms.length; i++) {
-      var others = [].concat(objectterms.slice(0, i),
+      const others = [].concat(objectterms.slice(0, i),
                              objectterms.slice(i+1, objectterms.length));
       results = results.concat(this.performObjectSearch(objectterms[i], others));
     }
@@ -386,8 +388,8 @@ var Search = {
     // display function below uses pop() to retrieve items) and then
     // alphabetically
     results.sort(function(a, b) {
-      var left = a[4];
-      var right = b[4];
+      let left = a[4];
+      let right = b[4];
       if (left > right) {
         return 1;
       } else if (left < right) {
@@ -405,18 +407,18 @@ var Search = {
     //console.info('search results:', Search.lastresults);
 
     // print the results
-    var resultCount = results.length;
+    const resultCount = results.length;
     function displayNextItem() {
       // results left, load the summary and display it
       if (results.length) {
-        var item = results.pop();
-        var listItem = $('<li style="display:none"></li>');
+        const item = results.pop();
+        const listItem = $('<li style="display:none"></li>');
         if (DOCUMENTATION_OPTIONS.FILE_SUFFIX === '') {
           // dirhtml builder
-          var dirname = item[0] + '/';
+          let dirname = item[0] + '/';
           if (dirname.match(/\/index\/$/)) {
             dirname = dirname.substring(0, dirname.length-6);
-          } else if (dirname == 'index/') {
+          } else if (dirname === 'index/') {
             dirname = '';
           }
           listItem.append($('<a/>').attr('href',
@@ -438,7 +440,7 @@ var Search = {
           $.ajax({url: DOCUMENTATION_OPTIONS.URL_ROOT + '_sources/' + item[0] + '.txt',
                   dataType: "text",
                   complete: function(jqxhr, textstatus) {
-                    var data = jqxhr.responseText;
+                    const data = jqxhr.responseText;
                     if (data !== '' && data !== undefined) {
                       listItem.append(Search.makeSearchSummary(data, searchterms, hlterms));
                     }
@@ -473,39 +475,39 @@ var Search = {
    * search for object names
    */
   performObjectSearch : function(object, otherterms) {
-    var filenames = this._index.filenames;
-    var objects = this._index.objects;
-    var objnames = this._index.objnames;
-    var titles = this._index.titles;
+    let filenames = this._index.filenames;
+    const objects = this._index.objects;
+    const objnames = this._index.objnames;
+    let titles = this._index.titles;
 
     var i;
-    var results = [];
+    let results = [];
 
     for (var prefix in objects) {
       for (var name in objects[prefix]) {
-        var fullname = (prefix ? prefix + '.' : '') + name;
+        const fullname = (prefix ? prefix + '.' : '') + name;
         if (fullname.toLowerCase().indexOf(object) > -1) {
-          var score = 0;
-          var parts = fullname.split('.');
+          const score = 0;
+          const parts = fullname.split('.');
           // check for different match types: exact matches of full name or
           // "last name" (i.e. last dotted part)
-          if (fullname == object || parts[parts.length - 1] == object) {
+          if (fullname === object || parts[parts.length - 1] === object) {
             score += Scorer.objNameMatch;
           // matches in last name
           } else if (parts[parts.length - 1].indexOf(object) > -1) {
             score += Scorer.objPartialMatch;
           }
-          var match = objects[prefix][name];
-          var objname = objnames[match[1]][2];
-          var title = titles[match[0]];
+          const match = objects[prefix][name];
+          const objname = objnames[match[1]][2];
+          const title = titles[match[0]];
           // If more than one term searched for, we require other words to be
           // found in the name/title/description
           if (otherterms.length > 0) {
-            var haystack = (prefix + ' ' + name + ' ' +
+            const haystack = (prefix + ' ' + name + ' ' +
                             objname + ' ' + title).toLowerCase();
-            var allfound = true;
+            let allfound = true;
             for (i = 0; i < otherterms.length; i++) {
-              if (haystack.indexOf(otherterms[i]) == -1) {
+              if (haystack.indexOf(otherterms[i]) === -1) {
                 allfound = false;
                 break;
               }
@@ -514,12 +516,12 @@ var Search = {
               continue;
             }
           }
-          var descr = objname + _(', in ') + title;
+          const descr = objname + _(', in ') + title;
 
-          var anchor = match[3];
+          let anchor = match[3];
           if (anchor === '')
             anchor = fullname;
-          else if (anchor == '-')
+          else if (anchor === '-')
             anchor = objnames[match[1]][1] + '-' + fullname;
           // add custom score for some objects according to scorer
           if (Scorer.objPrio.hasOwnProperty(match[2])) {
@@ -539,16 +541,16 @@ var Search = {
    * search for full-text terms in the index
    */
   performTermsSearch : function(searchterms, excluded, terms, score) {
-    var filenames = this._index.filenames;
-    var titles = this._index.titles;
+    const filenames = this._index.filenames;
+    const titles = this._index.titles;
 
     var i, j, file, files;
-    var fileMap = {};
-    var results = [];
+    const fileMap = {};
+    const results = [];
 
     // perform the search on the required terms
     for (i = 0; i < searchterms.length; i++) {
-      var word = searchterms[i];
+      const word = searchterms[i];
       // no match but word was a required one
       if ((files = terms[word]) === undefined)
         break;
@@ -567,15 +569,15 @@ var Search = {
 
     // now check if the files don't contain excluded terms
     for (file in fileMap) {
-      var valid = true;
+      let valid = true;
 
       // check if all requirements are matched
-      if (fileMap[file].length != searchterms.length)
+      if (fileMap[file].length !== searchterms.length)
           continue;
 
       // ensure that none of the excluded terms is in the search result
       for (i = 0; i < excluded.length; i++) {
-        if (terms[excluded[i]] == file ||
+        if (terms[excluded[i]] === file ||
           $u.contains(terms[excluded[i]] || [], file)) {
           valid = false;
           break;
@@ -598,18 +600,18 @@ var Search = {
    * latter for highlighting it.
    */
   makeSearchSummary : function(text, keywords, hlwords) {
-    var textLower = text.toLowerCase();
-    var start = 0;
+    const textLower = text.toLowerCase();
+    let start = 0;
     $.each(keywords, function() {
-      var i = textLower.indexOf(this.toLowerCase());
+      const i = textLower.indexOf(this.toLowerCase());
       if (i > -1)
         start = i;
     });
     start = Math.max(start - 120, 0);
-    var excerpt = ((start > 0) ? '...' : '') +
+    const excerpt = ((start > 0) ? '...' : '') +
       $.trim(text.substr(start, 240)) +
       ((start + 240 - text.length) ? '...' : '');
-    var rv = $('<div class="context"></div>').text(excerpt);
+    let rv = $('<div class="context"></div>').text(excerpt);
     $.each(hlwords, function() {
       rv = rv.highlightText(this, 'highlighted');
     });

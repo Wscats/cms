@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * doctools.js
  * ~~~~~~~~~~~
@@ -18,11 +20,11 @@ $u = _.noConflict();
  * make the code below compatible with browsers without
  * an installed firebug like debugger
 if (!window.console || !console.firebug) {
-  var names = ["log", "debug", "info", "warn", "error", "assert", "dir",
+  const names = ["log", "debug", "info", "warn", "error", "assert", "dir",
     "dirxml", "group", "groupEnd", "time", "timeEnd", "count", "trace",
     "profile", "profileEnd"];
   window.console = {};
-  for (var i = 0; i < names.length; ++i)
+  for (let i = 0; i < names.length; ++i)
     window.console[names[i]] = function() {};
 }
  */
@@ -45,14 +47,14 @@ jQuery.urlencode = encodeURIComponent;
  * it will always return arrays of strings for the value parts.
  */
 jQuery.getQueryParameters = function(s) {
-  if (typeof s == 'undefined')
+  if (typeof s === 'undefined')
     s = document.location.search;
-  var parts = s.substr(s.indexOf('?') + 1).split('&');
-  var result = {};
-  for (var i = 0; i < parts.length; i++) {
-    var tmp = parts[i].split('=', 2);
-    var key = jQuery.urldecode(tmp[0]);
-    var value = jQuery.urldecode(tmp[1]);
+  let parts = s.substr(s.indexOf('?') + 1).split('&');
+  const result = {};
+  for (let i = 0; i < parts.length; i++) {
+    const tmp = parts[i].split('=', 2);
+    const key = jQuery.urldecode(tmp[0]);
+    const value = jQuery.urldecode(tmp[1]);
     if (key in result)
       result[key].push(value);
     else
@@ -67,11 +69,11 @@ jQuery.getQueryParameters = function(s) {
  */
 jQuery.fn.highlightText = function(text, className) {
   function highlight(node) {
-    if (node.nodeType == 3) {
-      var val = node.nodeValue;
-      var pos = val.toLowerCase().indexOf(text);
+    if (node.nodeType === 3) {
+      const val = node.nodeValue;
+      const pos = val.toLowerCase().indexOf(text);
       if (pos >= 0 && !jQuery(node.parentNode).hasClass(className)) {
-        var span = document.createElement("span");
+        const span = document.createElement("span");
         span.className = className;
         span.appendChild(document.createTextNode(val.substr(pos, text.length)));
         node.parentNode.insertBefore(span, node.parentNode.insertBefore(
@@ -99,7 +101,7 @@ if (!jQuery.browser) {
   jQuery.uaMatch = function(ua) {
     ua = ua.toLowerCase();
 
-    var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
+    const match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
       /(webkit)[ \/]([\w.]+)/.exec(ua) ||
       /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
       /(msie) ([\w.]+)/.exec(ua) ||
@@ -118,7 +120,7 @@ if (!jQuery.browser) {
 /**
  * Small JavaScript module for the documentation.
  */
-var Documentation = {
+const Documentation = {
 
   init : function() {
     this.fixFirefoxAnchorBug();
@@ -130,22 +132,22 @@ var Documentation = {
    * i18n support
    */
   TRANSLATIONS : {},
-  PLURAL_EXPR : function(n) { return n == 1 ? 0 : 1; },
+  PLURAL_EXPR : function(n) { return n === 1 ? 0 : 1; },
   LOCALE : 'unknown',
 
   // gettext and ngettext don't access this so that the functions
   // can safely bound to a different name (_ = Documentation.gettext)
   gettext : function(string) {
-    var translated = Documentation.TRANSLATIONS[string];
-    if (typeof translated == 'undefined')
+    let translated = Documentation.TRANSLATIONS[string];
+    if (typeof translated === 'undefined')
       return string;
-    return (typeof translated == 'string') ? translated : translated[0];
+    return (typeof translated === 'string') ? translated : translated[0];
   },
 
   ngettext : function(singular, plural, n) {
-    var translated = Documentation.TRANSLATIONS[singular];
-    if (typeof translated == 'undefined')
-      return (n == 1) ? singular : plural;
+    const translated = Documentation.TRANSLATIONS[singular];
+    if (typeof translated === 'undefined')
+      return (n === 1) ? singular : plural;
     return translated[Documentation.PLURALEXPR(n)];
   },
 
@@ -189,10 +191,10 @@ var Documentation = {
    * highlight the search words provided in the url in the text
    */
   highlightSearchWords : function() {
-    var params = $.getQueryParameters();
-    var terms = (params.highlight) ? params.highlight[0].split(/\s+/) : [];
+    const params = $.getQueryParameters();
+    const terms = (params.highlight) ? params.highlight[0].split(/\s+/) : [];
     if (terms.length) {
-      var body = $('div.body');
+      let body = $('div.body');
       if (!body.length) {
         body = $('body');
       }
@@ -211,11 +213,11 @@ var Documentation = {
    * init the domain index toggle buttons
    */
   initIndexTable : function() {
-    var togglers = $('img.toggler').click(function() {
-      var src = $(this).attr('src');
-      var idnum = $(this).attr('id').substr(7);
+    const togglers = $('img.toggler').click(function() {
+      const src = $(this).attr('src');
+      const idnum = $(this).attr('id').substr(7);
       $('tr.cg-' + idnum).toggle();
-      if (src.substr(-9) == 'minus.png')
+      if (src.substr(-9) === 'minus.png')
         $(this).attr('src', src.substr(0, src.length-9) + 'plus.png');
       else
         $(this).attr('src', src.substr(0, src.length-8) + 'minus.png');
@@ -244,13 +246,13 @@ var Documentation = {
    * get the current relative url
    */
   getCurrentURL : function() {
-    var path = document.location.pathname;
-    var parts = path.split(/\//);
+    const path = document.location.pathname;
+    const parts = path.split(/\//);
     $.each(DOCUMENTATION_OPTIONS.URL_ROOT.split(/\//), function() {
-      if (this == '..')
+      if (this === '..')
         parts.pop();
     });
-    var url = parts.join('/');
+    const url = parts.join('/');
     return path.substring(url.lastIndexOf('/') + 1, path.length - 1);
   }
 };

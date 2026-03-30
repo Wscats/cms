@@ -1,3 +1,5 @@
+'use strict';
+
 ﻿/**
  * Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
@@ -13,12 +15,12 @@ if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
 CKEDITOR.config.height = 150;
 CKEDITOR.config.width = 'auto';
 
-var initSample = ( function() {
-	var wysiwygareaAvailable = isWysiwygareaAvailable(),
+const initSample = ( function() {
+	const wysiwygareaAvailable = isWysiwygareaAvailable(),
 		isBBCodeBuiltIn = !!CKEDITOR.plugins.get( 'bbcode' );
 
 	return function() {
-		var editorElement = CKEDITOR.document.getById( 'editor' );
+		const editorElement = CKEDITOR.document.getById( 'editor' );
 
 		// :(((
 		if ( isBBCodeBuiltIn ) {
@@ -40,7 +42,7 @@ var initSample = ( function() {
 	function isWysiwygareaAvailable() {
 		// If in development mode, then the wysiwygarea must be available.
 		// Split REV into two strings so builder does not replace it :D.
-		if ( CKEDITOR.revision == ( '%RE' + 'V%' ) ) {
+		if ( CKEDITOR.revision === ( '%RE' + 'V%' ) ) {
 			return true;
 		}
 

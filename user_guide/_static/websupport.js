@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * websupport.js
  * ~~~~~~~~~~~~~
@@ -12,7 +14,7 @@
 (function($) {
   $.fn.autogrow = function() {
     return this.each(function() {
-    var textarea = this;
+    let textarea = this;
 
     $.fn.autogrow.resize(textarea);
 
@@ -29,14 +31,14 @@
   };
 
   $.fn.autogrow.resize = function(textarea) {
-    var lineHeight = parseInt($(textarea).css('line-height'), 10);
-    var lines = textarea.value.split('\n');
-    var columns = textarea.cols;
-    var lineCount = 0;
+    const lineHeight = parseInt($(textarea).css('line-height'), 10);
+    const lines = textarea.value.split('\n');
+    const columns = textarea.cols;
+    const lineCount = 0;
     $.each(lines, function() {
       lineCount += Math.ceil(this.length / columns) || 1;
     });
-    var height = lineHeight * (lineCount + 1);
+    const height = lineHeight * (lineCount + 1);
     $(textarea).css('height', height);
   };
 })(jQuery);
@@ -107,8 +109,8 @@
   function setComparator() {
     // If the first three letters are "asc", sort in ascending order
     // and remove the prefix.
-    if (by.substring(0,3) == 'asc') {
-      var i = by.substring(3);
+    if (by.substring(0,3) === 'asc') {
+      let i = by.substring(3);
       comp = function(a, b) { return a[i] - b[i]; };
     } else {
       // Otherwise sort in descending order.
@@ -128,11 +130,11 @@
     by = 'rating'; // Default to sort by rating.
     // If the sortBy cookie is set, use that instead.
     if (document.cookie.length > 0) {
-      var start = document.cookie.indexOf('sortBy=');
-      if (start != -1) {
+      let start = document.cookie.indexOf('sortBy=');
+      if (start !== -1) {
         start = start + 7;
-        var end = document.cookie.indexOf(";", start);
-        if (end == -1) {
+        let end = document.cookie.indexOf(";", start);
+        if (end === -1) {
           end = document.cookie.length;
           by = unescape(document.cookie.substring(start, end));
         }
@@ -147,11 +149,11 @@
   function show(id) {
     $('#ao' + id).hide();
     $('#ah' + id).show();
-    var context = $.extend({id: id}, opts);
-    var popup = $(renderTemplate(popupTemplate, context)).hide();
+    let context = $.extend({id: id}, opts);
+    const popup = $(renderTemplate(popupTemplate, context)).hide();
     popup.find('textarea[name="proposal"]').hide();
     popup.find('a.by' + by).addClass('sel');
-    var form = popup.find('#cf' + id);
+    const form = popup.find('#cf' + id);
     form.submit(function(event) {
       event.preventDefault();
       addComment(form);
@@ -168,7 +170,7 @@
   function hide(id) {
     $('#ah' + id).hide();
     $('#ao' + id).show();
-    var div = $('#sc' + id);
+    let div = $('#sc' + id);
     div.slideUp('fast', function() {
       div.remove();
     });
@@ -184,8 +186,8 @@
      url: opts.getCommentsURL,
      data: {node: id},
      success: function(data, textStatus, request) {
-       var ul = $('#cl' + id);
-       var speed = 100;
+       let ul = $('#cl' + id);
+       let speed = 100;
        $('#cf' + id)
          .find('textarea[name="proposal"]')
          .data('source', data.source);
@@ -195,7 +197,7 @@
          ul.data('empty', true);
        } else {
          // If there are comments, sort them and put them in the list.
-         var comments = sortComments(data.comments);
+         let comments = sortComments(data.comments);
          speed = data.comments.length * 100;
          appendComments(comments, ul);
          ul.data('empty', false);
@@ -214,12 +216,12 @@
    * Add a comment via ajax and insert the comment into the comment tree.
    */
   function addComment(form) {
-    var node_id = form.find('input[name="node"]').val();
-    var parent_id = form.find('input[name="parent"]').val();
-    var text = form.find('textarea[name="comment"]').val();
-    var proposal = form.find('textarea[name="proposal"]').val();
+    const node_id = form.find('input[name="node"]').val();
+    const parent_id = form.find('input[name="parent"]').val();
+    let text = form.find('textarea[name="comment"]').val();
+    const proposal = form.find('textarea[name="proposal"]').val();
 
-    if (text == '') {
+    if (text === '') {
       showError('Please enter a comment.');
       return;
     }
@@ -247,13 +249,13 @@
           .val('')
           .add(form.find('input'))
           .removeAttr('disabled');
-	var ul = $('#cl' + (node_id || parent_id));
+	let ul = $('#cl' + (node_id || parent_id));
         if (ul.data('empty')) {
           $(ul).empty();
           ul.data('empty', false);
         }
         insertComment(data.comment);
-        var ao = $('#ao' + node_id);
+        const ao = $('#ao' + node_id);
         ao.find('img').attr({'src': opts.commentBrightImage});
         if (node_id) {
           // if this was a "root" comment, remove the commenting box
@@ -274,7 +276,7 @@
    */
   function appendComments(comments, ul) {
     $.each(comments, function() {
-      var div = createCommentDiv(this);
+      let div = createCommentDiv(this);
       ul.append($(document.createElement('li')).html(div));
       appendComments(this.children, div.find('ul.comment-children'));
       // To avoid stagnating data, don't store the comments children in data.
@@ -288,16 +290,16 @@
    * location in the comment tree.
    */
   function insertComment(comment) {
-    var div = createCommentDiv(comment);
+    let div = createCommentDiv(comment);
 
     // To avoid stagnating data, don't store the comments children in data.
     comment.children = null;
     div.data('comment', comment);
 
-    var ul = $('#cl' + (comment.node || comment.parent));
-    var siblings = getChildren(ul);
+    const ul = $('#cl' + (comment.node || comment.parent));
+    const siblings = getChildren(ul);
 
-    var li = $(document.createElement('li'));
+    const li = $(document.createElement('li'));
     li.hide();
 
     // Determine where in the parents children list to insert this comment.
@@ -338,8 +340,8 @@
       url: opts.deleteCommentURL,
       data: {id: id},
       success: function(data, textStatus, request) {
-        var div = $('#cd' + id);
-        if (data == 'delete') {
+        let div = $('#cd' + id);
+        if (data === 'delete') {
           // Moderator mode: remove the comment and all children immediately
           div.slideUp('fast', function() {
             div.remove();
@@ -355,7 +357,7 @@
           .find('#cm' + id + ', #dc' + id + ', #ac' + id + ', #rc' + id +
                 ', #sp' + id + ', #hp' + id + ', #cr' + id + ', #rl' + id)
           .remove();
-        var comment = div.data('comment');
+        let comment = div.data('comment');
         comment.username = '[deleted]';
         comment.text = '[deleted]';
         div.data('comment', comment);
@@ -381,7 +383,7 @@
   function showProposeChange(id) {
     $('#pc' + id).hide();
     $('#hc' + id).show();
-    var textarea = $('#pt' + id);
+    let textarea = $('#pt' + id);
     textarea.val(textarea.data('source'));
     $.fn.autogrow.resize(textarea[0]);
     textarea.slideDown('fast');
@@ -390,7 +392,7 @@
   function hideProposeChange(id) {
     $('#hc' + id).hide();
     $('#pc' + id).show();
-    var textarea = $('#pt' + id);
+    const textarea = $('#pt' + id);
     textarea.val('').removeAttr('disabled');
     textarea.slideUp('fast');
   }
@@ -401,20 +403,20 @@
 
   /** Handle when the user clicks on a sort by link. */
   function handleReSort(link) {
-    var classes = link.attr('class').split(/\s+/);
-    for (var i=0; i<classes.length; i++) {
-      if (classes[i] != 'sort-option') {
+    const classes = link.attr('class').split(/\s+/);
+    for (let i=0; i<classes.length; i++) {
+      if (classes[i] !== 'sort-option') {
 	by = classes[i].substring(2);
       }
     }
     setComparator();
     // Save/update the sortBy cookie.
-    var expiration = new Date();
+    const expiration = new Date();
     expiration.setDate(expiration.getDate() + 365);
     document.cookie= 'sortBy=' + escape(by) +
                      ';expires=' + expiration.toUTCString();
     $('ul.comment-ul').each(function(index, ul) {
-      var comments = getChildren($(ul), true);
+      let comments = getChildren($(ul), true);
       comments = sortComments(comments);
       appendComments(comments, $(ul).empty());
     });
@@ -429,37 +431,37 @@
       return;
     }
 
-    var id = link.attr('id');
+    let id = link.attr('id');
     if (!id) {
       // Didn't click on one of the voting arrows.
       return;
     }
     // If it is an unvote, the new vote value is 0,
     // Otherwise it's 1 for an upvote, or -1 for a downvote.
-    var value = 0;
-    if (id.charAt(1) != 'u') {
-      value = id.charAt(0) == 'u' ? 1 : -1;
+    let value = 0;
+    if (id.charAt(1) !== 'u') {
+      value = id.charAt(0) === 'u' ? 1 : -1;
     }
     // The data to be sent to the server.
-    var d = {
+    const d = {
       comment_id: id.substring(2),
       value: value
     };
 
     // Swap the vote and unvote links.
     link.hide();
-    $('#' + id.charAt(0) + (id.charAt(1) == 'u' ? 'v' : 'u') + d.comment_id)
+    $('#' + id.charAt(0) + (id.charAt(1) === 'u' ? 'v' : 'u') + d.comment_id)
       .show();
 
     // The div the comment is displayed in.
-    var div = $('div#cd' + d.comment_id);
-    var data = div.data('comment');
+    let div = $('div#cd' + d.comment_id);
+    const data = div.data('comment');
 
     // If this is not an unvote, and the other vote arrow has
     // already been pressed, unpress it.
     if ((d.value !== 0) && (data.vote === d.value * -1)) {
-      $('#' + (d.value == 1 ? 'd' : 'u') + 'u' + d.comment_id).hide();
-      $('#' + (d.value == 1 ? 'd' : 'u') + 'v' + d.comment_id).show();
+      $('#' + (d.value === 1 ? 'd' : 'u') + 'u' + d.comment_id).hide();
+      $('#' + (d.value === 1 ? 'd' : 'u') + 'v' + d.comment_id).show();
     }
 
     // Update the comments rating in the local data.
@@ -469,7 +471,7 @@
 
     // Change the rating text.
     div.find('.rating:first')
-      .text(data.rating + ' point' + (data.rating == 1 ? '' : 's'));
+      .text(data.rating + ' point' + (data.rating === 1 ? '' : 's'));
 
     // Send the vote information to the server.
     $.ajax({
@@ -491,7 +493,7 @@
     $('#cr' + id).show();
 
     // Add the reply li to the children ul.
-    var div = $(renderTemplate(replyTemplate, {id: id})).hide();
+    let div = $(renderTemplate(replyTemplate, {id: id})).hide();
     $('#cl' + id)
       .prepend(div)
       // Setup the submit handler for the reply form.
@@ -540,10 +542,10 @@
    * recursively include childrens' children.
    */
   function getChildren(ul, recursive) {
-    var children = [];
+    let children = [];
     ul.children().children("[id^='cd']")
       .each(function() {
-        var comment = $(this).data('comment');
+        let comment = $(this).data('comment');
         if (recursive)
           comment.children = getChildren($(this).find('#cl' + comment.id), true);
         children.push(comment);
@@ -559,27 +561,27 @@
     }
     // Prettify the comment rating.
     comment.pretty_rating = comment.rating + ' point' +
-      (comment.rating == 1 ? '' : 's');
+      (comment.rating === 1 ? '' : 's');
     // Make a class (for displaying not yet moderated comments differently)
     comment.css_class = comment.displayed ? '' : ' moderate';
     // Create a div for this comment.
-    var context = $.extend({}, opts, comment);
-    var div = $(renderTemplate(commentTemplate, context));
+    const context = $.extend({}, opts, comment);
+    const div = $(renderTemplate(commentTemplate, context));
 
     // If the user has voted on this comment, highlight the correct arrow.
     if (comment.vote) {
-      var direction = (comment.vote == 1) ? 'u' : 'd';
+      const direction = (comment.vote === 1) ? 'u' : 'd';
       div.find('#' + direction + 'v' + comment.id).hide();
       div.find('#' + direction + 'u' + comment.id).show();
     }
 
-    if (opts.moderator || comment.text != '[deleted]') {
+    if (opts.moderator || comment.text !== '[deleted]') {
       div.find('a.reply').show();
       if (comment.proposal_diff)
         div.find('#sp' + comment.id).show();
       if (opts.moderator && !comment.displayed)
         div.find('#cm' + comment.id).show();
-      if (opts.moderator || (opts.username == comment.username))
+      if (opts.moderator || (opts.username === comment.username))
         div.find('#dc' + comment.id).show();
     }
     return div;
@@ -591,10 +593,10 @@
    * are not escaped.
    */
   function renderTemplate(template, context) {
-    var esc = $(document.createElement('div'));
+    const esc = $(document.createElement('div'));
 
     function handle(ph, escape) {
-      var cur = context;
+      let cur = context;
       $.each(ph.split('.'), function() {
         cur = cur[this];
       });
@@ -602,7 +604,7 @@
     }
 
     return template.replace(/<([%#])([\w\.]*)\1>/g, function() {
-      return handle(arguments[2], arguments[1] == '%' ? true : false);
+      return handle(arguments[2], arguments[1] === '%' ? true : false);
     });
   }
 
@@ -620,11 +622,11 @@
   /** Add a link the user uses to open the comments popup. */
   $.fn.comment = function() {
     return this.each(function() {
-      var id = $(this).attr('id').substring(1);
-      var count = COMMENT_METADATA[id];
-      var title = count + ' comment' + (count == 1 ? '' : 's');
-      var image = count > 0 ? opts.commentBrightImage : opts.commentImage;
-      var addcls = count == 0 ? ' nocomment' : '';
+      let id = $(this).attr('id').substring(1);
+      const count = COMMENT_METADATA[id];
+      let title = count + ' comment' + (count === 1 ? '' : 's');
+      const image = count > 0 ? opts.commentBrightImage : opts.commentImage;
+      const addcls = count === 0 ? ' nocomment' : '';
       $(this)
         .append(
           $(document.createElement('a')).attr({
@@ -661,7 +663,7 @@
     });
   };
 
-  var opts = {
+  let opts = {
     processVoteURL: '/_process_vote',
     addCommentURL: '/_add_comment',
     getCommentsURL: '/_get_comments',
@@ -679,11 +681,11 @@
     moderator: false
   };
 
-  if (typeof COMMENT_OPTIONS != "undefined") {
+  if (typeof COMMENT_OPTIONS !== "undefined") {
     opts = jQuery.extend(opts, COMMENT_OPTIONS);
   }
 
-  var popupTemplate = '\
+  const popupTemplate = '\
     <div class="sphinx-comments" id="sc<%id%>">\
       <p class="sort-options">\
         Sort by:\
@@ -721,7 +723,7 @@
       </div>\
     </div>';
 
-  var commentTemplate = '\
+  const commentTemplate = '\
     <div id="cd<%id%>" class="sphinx-comment<%css_class%>">\
       <div class="vote">\
         <div class="arrow">\
@@ -767,7 +769,7 @@
       </div>\
     </div>';
 
-  var replyTemplate = '\
+  const replyTemplate = '\
     <li>\
       <div class="reply-div" id="rd<%id%>">\
         <form id="rf<%id%>">\
@@ -791,17 +793,17 @@ $(document).ready(function() {
 
   // highlight search words in search results
   $("div.context").each(function() {
-    var params = $.getQueryParameters();
-    var terms = (params.q) ? params.q[0].split(/\s+/) : [];
-    var result = $(this);
+    const params = $.getQueryParameters();
+    const terms = (params.q) ? params.q[0].split(/\s+/) : [];
+    const result = $(this);
     $.each(terms, function() {
       result.highlightText(this.toLowerCase(), 'highlighted');
     });
   });
 
   // directly open comment window if requested
-  var anchor = document.location.hash;
-  if (anchor.substring(0, 9) == '#comment-') {
+  const anchor = document.location.hash;
+  if (anchor.substring(0, 9) === '#comment-') {
     $('#ao' + anchor.substring(9)).click();
     document.location.hash = '#s' + anchor.substring(9);
   }
